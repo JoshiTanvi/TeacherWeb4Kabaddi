@@ -8,15 +8,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.min.js"></script>
     <script src="p5.play.js"></script>
     
-    <script src="https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-database.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-database.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
 
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyA8fhOwttDSLdkkreraaiPKcAvkd128Bdo",
+    authDomain: "kabaddi-c479c.firebaseapp.com",
+    projectId: "kabaddi-c479c",
+    storageBucket: "kabaddi-c479c.appspot.com",
+    messagingSenderId: "102622727880",
+    appId: "1:102622727880:web:6c20292be3056dd084dffd"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
 
-    <script>
-
-    //Your config file here
-    
-    </script>
     <link rel="stylesheet" type="text/css" href="style.css"/>
   </head>
   <body>

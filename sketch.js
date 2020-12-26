@@ -19,6 +19,7 @@ function setup(){
     p1 = createSprite(100, 300, 10, 10);
     p1.shapeColor = "red"
     p1.addAnimation("walking", p1animation);
+    p1animation.frameDelay = 300;
 
     p1.scale = 0.5;
     p1.setCollider("circle", 0, 0, 50);
@@ -29,6 +30,7 @@ function setup(){
     p2 = createSprite(500, 300, 10, 10);
     p2.shapeColor = "yellow"
     p2.addAnimation("walking", p2animation);
+    p2animation.frameDelay = 300;
     p2.scale = -0.5;
     p2.setCollider("circle", 0, 0, 50);
     p2.debug = true;
@@ -64,6 +66,7 @@ function draw(){
     background("green");
 
     if(gameState===0){
+        
         textSize(20);
         fill("black");
         text("Press Space to Toss", 210, 100);
@@ -75,6 +78,8 @@ function draw(){
             'x':500,
             'y':300
          })
+
+
 
         if(keyDown("space")){
             rand=Math.round(random(1,2));
@@ -120,17 +125,18 @@ function draw(){
             
             if(p1.x>500){
                 database.ref('/').update({
-                    'p1Score':p1Score - 5,
-                    'p2Score':p2Score + 5,
+                    'p1Score':p1Score + 5,
+                    'p2Score':p2Score - 5,
                     'gameState': 0
                 })
                 alert("RED WON");
+                
             }
             if(p1.isTouching(p2)){
                 database.ref('/').update({
                     'gameState': 0,
-                    'p1Score':p1Score + 5,
-                    'p2Score':p2Score - 5,
+                    'p1Score':p1Score - 5,
+                    'p2Score':p2Score + 5,
                     
                 })
                 alert("RED LOST");
@@ -179,8 +185,8 @@ function draw(){
 */
             if(p2.x<100){
                 database.ref('/').update({
-                    'p1Score':p1Score + 5,
-                    'p2Score':p2Score - 5,
+                    'p1Score':p1Score - 5,
+                    'p2Score':p2Score + 5,
                     'gameState': 0
                 })
                 alert("YELLOW WON");
@@ -189,8 +195,8 @@ function draw(){
             if(p1.isTouching(p2)){
                 database.ref('/').update({
                     'gameState': 0,
-                    'p1Score':p1Score - 5,
-                    'p2Score':p2Score + 5,
+                    'p1Score':p1Score + 5,
+                    'p2Score':p2Score - 5,
                     
                 })
                 alert("YELLOW LOST");
@@ -199,9 +205,9 @@ function draw(){
         }
     
     textSize(20);
-    fill("yellow")
-    text("Red " + p1Score, 350, 20);
     fill("red")
+    text("Red " + p1Score, 350, 20);
+    fill("yellow")
     text("Yellow " + p2Score, 150, 20);
 
     drawMidLine();

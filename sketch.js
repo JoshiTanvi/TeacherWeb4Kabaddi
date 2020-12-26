@@ -12,7 +12,8 @@ function preload(){
 }
 
 function setup(){
-database=firebase.database();
+
+    database = firebase.database();
     createCanvas(600, 600);
 
     p1 = createSprite(100, 300, 10, 10);
@@ -31,21 +32,31 @@ database=firebase.database();
     p2.scale = -0.5;
     p2.setCollider("circle", 0, 0, 50);
     p2.debug = true;
+
+    database.ref('/').update({
+        'gameState':0,
+        'p1Score':0,
+        'p2Score':0
+     })
+
+    p1pos = database.ref('player1/position');
+    p1pos.on("value",readpos1);
+
+    p2pos=database.ref('player2/position');
+    p2pos.on("value",readpos2);
+
+    gameState=database.ref('gameState/');
+    gameState.on("value",readgs);
+
+    p1score=database.ref('p1Score/');
+    p1score.on("value",readscore1);
+
+    p2score=database.ref('p2Score/');
+    p2score.on("value",readscore2);
+
+
+    //console.log(p1pos.x);
    
-    var p1pos=database.ref('player1/position');
-   p1pos.on("value",readpos1);
-
-   var p2pos=database.ref('player2/position');
-   p2pos.on("value",readpos2);
-
-   gameState=database.ref('gameState/');
-   gameState.on("value",readgs);
-
-   p1score=database.ref('p1Score/');
-   p1score.on("value",readscore1);
-
-   p2score=database.ref('p2Score/');
-   p2score.on("value",readscore2);
 
 }
 
@@ -56,6 +67,14 @@ function draw(){
         textSize(20);
         fill("black");
         text("Press Space to Toss", 210, 100);
+        database.ref('player1/position').update({
+            'x':100,
+            'y':300
+         })
+         database.ref('player2/position').update({
+            'x':500,
+            'y':300
+         })
 
         if(keyDown("space")){
             rand=Math.round(random(1,2));
@@ -72,16 +91,9 @@ function draw(){
                 })
                 alert("YELLOW RIDE");
             }
-            database.ref('player1/position').update({
-                'x':150,
-                'y':300
-             })
-             database.ref('player2/position').update({
-                'x':500,
-                'y':300
-             })
-            }
+            
         }
+    }
 
 
         if(gameState===1){
@@ -98,10 +110,10 @@ function draw(){
             else if(keyDown(DOWN_ARROW)){
                 writepos1(0,5);
             }
-            else if(keyDown("c")){
+            else if(keyDown("w")){
                 writepos2(0,-5);
             }
-            else if(keyDown("d")){
+            else if(keyDown("s")){
                 writepos2(0,5);
             }
 
@@ -129,17 +141,23 @@ function draw(){
 
 
         if(gameState===2){
-            if(keyDown("a")){
+            if(keyDown(LEFT_ARROW)){
                 writepos2(-5,0);
             }
-            else if(keyDown("b")){
+            else if(keyDown(RIGHT_ARROW)){
                 writepos2(5,0);
             }
-            else if(keyDown("c")){
+            else if(keyDown(UP_ARROW)){
                 writepos2(0,-5);
             }
-            else if(keyDown("d")){
+            else if(keyDown(DOWN_ARROW)){
                 writepos2(0,5);
+            }
+            else if(keyDown("w")){
+                writepos1(0,-5);
+            }
+            else if(keyDown("s")){
+                writepos1(0,5);
             }
 
 
@@ -149,7 +167,7 @@ function draw(){
             else if(keyDown(RIGHT_ARROW)){
                 writepos1(5,0);
             }
-            */
+            
 
 
             else if(keyDown(UP_ARROW)){
@@ -158,28 +176,28 @@ function draw(){
             else if(keyDown(DOWN_ARROW)){
                 writepos1(0,5);
             }
-
-            if(p2.x<150){
+*/
+            if(p2.x<100){
                 database.ref('/').update({
                     'p1Score':p1Score + 5,
                     'p2Score':p2Score - 5,
                     'gameState': 0
                 })
                 alert("YELLOW WON");
+            }
 
-}
-
-if(p1.isTouching(p2)){
-    database.ref('/').update({
-        'gameState': 0,
-        'p1Score':p1Score - 5,
-        'p2Score':p2Score + 5,
-        
-    })
-    alert("YELLOW LOST");
-}
+            if(p1.isTouching(p2)){
+                database.ref('/').update({
+                    'gameState': 0,
+                    'p1Score':p1Score - 5,
+                    'p2Score':p2Score + 5,
+                    
+                })
+                alert("YELLOW LOST");
+            }
 
         }
+    
     textSize(20);
     fill("yellow")
     text("Red " + p1Score, 350, 20);
@@ -190,22 +208,23 @@ if(p1.isTouching(p2)){
     drawYellowLine();
     drawRedLine();
 
+    
     drawSprites();
 }
 
 
 function writepos1(x,y){
     database.ref('player1/position').set({
-        'x': p1pos.x + x,
-        'y': p1pos.y + y
+        'x': p1.x + x,
+        'y': p1.y + y
     })
 }
 
 
 function writepos2(x,y){
     database.ref('player2/position').set({
-        'x': p2pos.x + x,
-        'y': p2pos.y + y
+        'x': p2.x + x,
+        'y': p2.y + y
     })
 }
 
@@ -213,7 +232,7 @@ function writepos2(x,y){
 function readpos1(data){
     position1=data.val();
     p1.x=position1.x;
-    p1.y=position1.y
+    p1.y=position1.y;
 }
 
 
